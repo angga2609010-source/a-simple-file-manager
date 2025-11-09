@@ -50,4 +50,4 @@ A Simple File Manager / AnggaSabber File Manager is a Python Based file manager 
 + Alt+Up - Navigate up
 + Ctrl+Home - Go to home directory
 + Ctrl+Q - Quit application
-
++ alt+F4 - Basically ctrl+Q
