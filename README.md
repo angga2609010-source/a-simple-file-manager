@@ -28,7 +28,7 @@ Linux system
 
 # Instalation
 
-# Install PyQt6
+## Install PyQt6
 
   pip install PyQt6
 
@@ -36,7 +36,7 @@ Linux system
 
   pipx install pyqt6
 
-  # Running
+  ## Running
 
   chmod +x asfm.py
   
