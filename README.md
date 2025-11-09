@@ -15,9 +15,9 @@ A Simple File Manager / AnggaSabber File Manager is a Python Based file manager 
 
 # Requirements
 
-+ Python 3.7 or higher\
-+ PyQt6\
-+ Linux system\
++ Python 3.7 or higher
++ PyQt6
++ Linux system
 
 # Instalation
 
