@@ -4,14 +4,14 @@ A Simple File Manager / AnggaSabber File Manager is a Python Based file manager 
 ![The app image](https://github.com/angga2609010-source/a-simple-file-manager/blob/main/ss.png)
 
 # Features
-+ Dual Panel View: Directory tree on the left, file list on the right\
-+ File Operations: Copy, Cut, Paste, Rename, Delete\
-+ Recycle Bin: Deleted files are moved to system trash\
-+ Hidden Files: Toggle to show/hide hidden files and folders\
-+ Navigation: Back, Forward, Up, and address bar navigation\
-+ Keyboard Shortcuts: Full keyboard support for common operations\
-+ ative Icons: Uses system file icons for a native look\
-+ Status Bar: Shows current directory and item count\
++ Dual Panel View: Directory tree on the left, file list on the right
++ File Operations: Copy, Cut, Paste, Rename, Delete
++ Recycle Bin: Deleted files are moved to system trash
++ Hidden Files: Toggle to show/hide hidden files and folders
++ Navigation: Back, Forward, Up, and address bar navigation
++ Keyboard Shortcuts: Full keyboard support for common operations
++ ative Icons: Uses system file icons for a native look
++ Status Bar: Shows current directory and item count
 
 # Requirements
 
