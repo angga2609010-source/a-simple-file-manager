@@ -669,7 +669,8 @@ class FileBrowser(QWidget):
     def on_list_selection_changed(self):
         """Handle list view selection change"""
         indexes = self.list_view.selectedIndexes()
-        selected_paths = [self.list_model.filePath(idx) for idx in indexes]
+        # Filter to only column 0 (Name column) to get unique rows, not all columns
+        selected_paths = [self.list_model.filePath(idx) for idx in indexes if idx.column() == 0]
         self.selection_changed.emit(selected_paths)
     
     def on_list_double_clicked(self, index: QModelIndex):
@@ -684,7 +685,8 @@ class FileBrowser(QWidget):
     def get_selected_paths(self) -> list:
         """Get currently selected file paths"""
         indexes = self.list_view.selectedIndexes()
-        return [self.list_model.filePath(idx) for idx in indexes]
+        # Filter to only column 0 (Name column) to get unique rows, not all columns
+        return [self.list_model.filePath(idx) for idx in indexes if idx.column() == 0]
     
     def get_current_path(self) -> str:
         """Get current directory path"""
@@ -1244,9 +1246,9 @@ class MainWindow(QMainWindow):
     
     def setup_toolbar(self):
         """Setup the toolbar"""
-        toolbar = QToolBar("Main Toolbar")
-        toolbar.setMovable(False)
-        toolbar.setStyleSheet("""
+        self.toolbar = QToolBar("Main Toolbar")
+        self.toolbar.setMovable(False)
+        self.toolbar.setStyleSheet("""
             QToolBar {
                 background-color: #fafafa;
                 border: none;
@@ -1260,7 +1262,7 @@ class MainWindow(QMainWindow):
                 margin: 4px 2px;
             }
         """)
-        self.addToolBar(toolbar)
+        self.addToolBar(self.toolbar)
         
         # Flat button style
         button_style = """
@@ -1285,49 +1287,49 @@ class MainWindow(QMainWindow):
         self.back_btn = QPushButton("← Back")
         self.back_btn.clicked.connect(self.on_back)
         self.back_btn.setStyleSheet(button_style)
-        toolbar.addWidget(self.back_btn)
+        self.toolbar.addWidget(self.back_btn)
         
         self.forward_btn = QPushButton("Forward →")
         self.forward_btn.clicked.connect(self.on_forward)
         self.forward_btn.setStyleSheet(button_style)
-        toolbar.addWidget(self.forward_btn)
+        self.toolbar.addWidget(self.forward_btn)
         
         self.up_btn = QPushButton("↑ Up")
         self.up_btn.clicked.connect(self.on_up)
         self.up_btn.setStyleSheet(button_style)
-        toolbar.addWidget(self.up_btn)
+        self.toolbar.addWidget(self.up_btn)
         
-        toolbar.addSeparator()
+        self.toolbar.addSeparator()
         
         # File operations
         self.copy_btn = QPushButton("Copy")
         self.copy_btn.clicked.connect(self.on_copy)
         self.copy_btn.setStyleSheet(button_style)
-        toolbar.addWidget(self.copy_btn)
+        self.toolbar.addWidget(self.copy_btn)
         
         self.paste_btn = QPushButton("Paste")
         self.paste_btn.clicked.connect(self.on_paste)
         self.paste_btn.setStyleSheet(button_style)
-        toolbar.addWidget(self.paste_btn)
+        self.toolbar.addWidget(self.paste_btn)
         
-        toolbar.addSeparator()
+        self.toolbar.addSeparator()
         
         self.delete_btn = QPushButton("Delete")
         self.delete_btn.clicked.connect(self.on_delete)
         self.delete_btn.setStyleSheet(button_style)
-        toolbar.addWidget(self.delete_btn)
+        self.toolbar.addWidget(self.delete_btn)
         
         self.rename_btn = QPushButton("Rename")
         self.rename_btn.clicked.connect(self.on_rename)
         self.rename_btn.setStyleSheet(button_style)
-        toolbar.addWidget(self.rename_btn)
+        self.toolbar.addWidget(self.rename_btn)
         
-        toolbar.addSeparator()
+        self.toolbar.addSeparator()
         
         self.new_folder_btn = QPushButton("New Folder")
         self.new_folder_btn.clicked.connect(self.on_new_folder)
         self.new_folder_btn.setStyleSheet(button_style)
-        toolbar.addWidget(self.new_folder_btn)
+        self.toolbar.addWidget(self.new_folder_btn)
     
     def setup_status_bar(self):
         """Setup the status bar"""
@@ -1473,6 +1475,10 @@ class MainWindow(QMainWindow):
         # Apply to file browser
         if hasattr(self, 'file_browser'):
             self.file_browser.apply_theme(False)
+        
+        # Apply to toolbar and address bar
+        self.apply_toolbar_theme(False)
+        self.apply_address_bar_theme(False)
     
     def apply_dark_theme(self):
         """Apply dark theme"""
@@ -1492,6 +1498,163 @@ class MainWindow(QMainWindow):
         # Apply to file browser
         if hasattr(self, 'file_browser'):
             self.file_browser.apply_theme(True)
+        
+        # Apply to toolbar and address bar
+        self.apply_toolbar_theme(True)
+        self.apply_address_bar_theme(True)
+    
+    def apply_toolbar_theme(self, dark_mode: bool):
+        """Apply theme to toolbar and toolbar buttons"""
+        if dark_mode:
+            toolbar_style = """
+                QToolBar {
+                    background-color: #2d2d2d;
+                    border: none;
+                    border-bottom: 1px solid #3a3a3a;
+                    spacing: 4px;
+                    padding: 4px;
+                }
+                QToolBar::separator {
+                    background-color: #3a3a3a;
+                    width: 1px;
+                    margin: 4px 2px;
+                }
+            """
+            button_style = """
+                QPushButton {
+                    background-color: #3a3a3a;
+                    color: #e0e0e0;
+                    border: 1px solid #4a4a4a;
+                    border-radius: 4px;
+                    padding: 6px 12px;
+                    font-size: 11px;
+                }
+                QPushButton:hover {
+                    background-color: #4a4a4a;
+                    border: 1px solid #5a5a5a;
+                }
+                QPushButton:pressed {
+                    background-color: #2d2d2d;
+                }
+            """
+        else:
+            toolbar_style = """
+                QToolBar {
+                    background-color: #fafafa;
+                    border: none;
+                    border-bottom: 1px solid #e0e0e0;
+                    spacing: 4px;
+                    padding: 4px;
+                }
+                QToolBar::separator {
+                    background-color: #e0e0e0;
+                    width: 1px;
+                    margin: 4px 2px;
+                }
+            """
+            button_style = """
+                QPushButton {
+                    background-color: #f5f5f5;
+                    color: #212121;
+                    border: 1px solid #e0e0e0;
+                    border-radius: 4px;
+                    padding: 6px 12px;
+                    font-size: 11px;
+                }
+                QPushButton:hover {
+                    background-color: #eeeeee;
+                    border: 1px solid #bdbdbd;
+                }
+                QPushButton:pressed {
+                    background-color: #e0e0e0;
+                }
+            """
+        
+        if hasattr(self, 'toolbar'):
+            self.toolbar.setStyleSheet(toolbar_style)
+            
+            # Apply button style to all toolbar buttons
+            toolbar_buttons = [
+                self.back_btn, self.forward_btn, self.up_btn,
+                self.copy_btn, self.paste_btn, self.delete_btn,
+                self.rename_btn, self.new_folder_btn
+            ]
+            for btn in toolbar_buttons:
+                if btn:
+                    btn.setStyleSheet(button_style)
+    
+    def apply_address_bar_theme(self, dark_mode: bool):
+        """Apply theme to address bar and refresh button"""
+        if dark_mode:
+            address_bar_style = """
+                QLineEdit {
+                    background-color: #2d2d2d;
+                    color: #e0e0e0;
+                    border: 1px solid #3a3a3a;
+                    border-radius: 4px;
+                    padding: 6px 10px;
+                    font-size: 12px;
+                }
+                QLineEdit:focus {
+                    border: 2px solid #2196f3;
+                    padding: 5px 9px;
+                }
+            """
+            refresh_btn_style = """
+                QPushButton {
+                    background-color: #3a3a3a;
+                    color: #e0e0e0;
+                    border: 1px solid #4a4a4a;
+                    border-radius: 4px;
+                    padding: 6px 10px;
+                    min-width: 30px;
+                    font-size: 14px;
+                }
+                QPushButton:hover {
+                    background-color: #4a4a4a;
+                    border: 1px solid #5a5a5a;
+                }
+                QPushButton:pressed {
+                    background-color: #2d2d2d;
+                }
+            """
+        else:
+            address_bar_style = """
+                QLineEdit {
+                    background-color: #ffffff;
+                    border: 1px solid #e0e0e0;
+                    border-radius: 4px;
+                    padding: 6px 10px;
+                    font-size: 12px;
+                }
+                QLineEdit:focus {
+                    border: 2px solid #2196f3;
+                    padding: 5px 9px;
+                }
+            """
+            refresh_btn_style = """
+                QPushButton {
+                    background-color: #f5f5f5;
+                    color: #212121;
+                    border: 1px solid #e0e0e0;
+                    border-radius: 4px;
+                    padding: 6px 10px;
+                    min-width: 30px;
+                    font-size: 14px;
+                }
+                QPushButton:hover {
+                    background-color: #eeeeee;
+                    border: 1px solid #bdbdbd;
+                }
+                QPushButton:pressed {
+                    background-color: #e0e0e0;
+                }
+            """
+        
+        if hasattr(self, 'address_bar'):
+            self.address_bar.setStyleSheet(address_bar_style)
+        if hasattr(self, 'refresh_btn'):
+            self.refresh_btn.setStyleSheet(refresh_btn_style)
     
     def on_empty_trash(self):
         """Handle empty trash action"""
