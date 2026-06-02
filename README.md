@@ -1,5 +1,5 @@
 # A Simple File Manager
-A Simple File Manager / AnggaSabber File Manager is a Python Based file manager for Linux that uses PyQt6 and currently on development
+A Simple File Manager / AnggaSabber File Manager is a Python Based file manager for Linux that uses PyQt6(discontinued)
 
 ![The app image](https://github.com/angga2609010-source/a-simple-file-manager/blob/main/ss.png)
 
